@@ -1,0 +1,1104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CRP/DRN Weekly Reporting</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Google Sans', Roboto, Arial, sans-serif;
+  background: #f8f9fa;
+  color: #202124;
+  padding: 24px 16px 60px;
+  font-size: 14px;
+  line-height: 1.5;
+}
+.form-wrap { max-width: 860px; margin: 0 auto; }
+
+/* Header */
+.form-header {
+  background: #fff;
+  border-top: 10px solid #22378C;
+  border-radius: 8px;
+  padding: 24px;
+  margin-bottom: 16px;
+  box-shadow: 0 1px 3px rgba(0,0,0,.1);
+}
+.form-header h1 { font-size: 24px; font-weight: 400; color: #202124; margin-bottom: 4px; }
+.form-header p { font-size: 13px; color: #5f6368; }
+.form-header .intro { font-size: 13px; color: #3c4043; margin-top: 12px; line-height: 1.6; }
+
+/* Cards */
+.card {
+  background: #fff;
+  border-radius: 8px;
+  padding: 24px;
+  margin-bottom: 16px;
+  box-shadow: 0 1px 3px rgba(0,0,0,.1);
+}
+.section-title {
+  font-size: 16px;
+  color: #22378C;
+  font-weight: 500;
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+/* Questions */
+.q-block { margin-bottom: 24px; }
+.q-block:last-child { margin-bottom: 0; }
+.q-label {
+  font-size: 14px;
+  color: #202124;
+  margin-bottom: 6px;
+  font-weight: 400;
+}
+.q-label .req { color: #d93025; }
+.q-hint {
+  font-size: 13.5px;
+  color: #5f6368;
+  margin-bottom: 10px;
+  margin-top: -2px;
+  line-height: 1.5;
+}
+
+/* Radio */
+.radio-group { display: flex; flex-direction: column; gap: 6px; }
+.radio-opt {
+  display: flex; align-items: center; gap: 10px;
+  font-size: 14px; color: #202124; cursor: pointer; padding: 4px 0;
+}
+.radio-opt input { accent-color: #22378C; width: 16px; height: 16px; flex-shrink: 0; }
+
+/* Inputs */
+input[type=text], input[type=number], input[type=date],
+input[type=url], input[type=email], select {
+  width: 100%;
+  border: none;
+  border-bottom: 1px solid #80868b;
+  padding: 6px 0;
+  font-size: 14px;
+  color: #202124;
+  background: transparent;
+  outline: none;
+  font-family: inherit;
+  transition: border-color .15s;
+}
+input[type=text]:focus, input[type=number]:focus, input[type=date]:focus,
+input[type=url]:focus, input[type=email]:focus, select:focus {
+  border-bottom: 2px solid #1a73e8;
+}
+input[type=number] { max-width: 120px; }
+/* Remove spinner arrows — one tester thought they were required to use
+   them and spent a lot of time clicking instead of just typing a number. */
+input[type=number]::-webkit-outer-spin-button,
+input[type=number]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type=number] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+textarea {
+  display: block;
+  width: 100%;
+  min-height: 110px;
+  resize: none;
+  overflow: hidden;
+  border: 1.5px solid #dadce0;
+  border-radius: 8px;
+  padding: 12px 14px;
+  font-size: 14px;
+  font-family: inherit;
+  color: #202124;
+  background: #fafafa;
+  line-height: 1.7;
+  outline: none;
+  transition: border-color .15s, background .15s;
+  box-sizing: border-box;
+}
+textarea:focus {
+  border-color: #1a73e8;
+  background: #fff;
+  box-shadow: 0 0 0 3px rgba(26,115,232,.1);
+}
+textarea::placeholder {
+  color: #9aa0a6;
+}
+.input-inline { display: flex; align-items: center; gap: 10px; }
+.input-inline label { font-size: 13px; color: #5f6368; white-space: nowrap; }
+.input-inline input { max-width: 100px; }
+
+/* Conditional blocks */
+.conditional {
+  margin-top: 14px;
+  padding: 14px 16px;
+  background: #f8f9fa;
+  border-left: 3px solid #dadce0;
+  border-radius: 0 4px 4px 0;
+  display: none;
+}
+.conditional.visible { display: block; }
+.conditional .q-label { font-size: 13px; font-weight: 500; color: #22378C; margin-bottom: 8px; }
+.conditional .q-hint { font-size: 13.5px; }
+
+/* Tables */
+.tbl-wrap { overflow-x: auto; margin-bottom: 10px; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; table-layout: fixed; min-width: 820px; }
+th {
+  background: #f1f3f4; color: #5f6368; font-size: 11px; font-weight: 500;
+  text-transform: uppercase; letter-spacing: .04em; padding: 8px 8px;
+  text-align: left; border-bottom: 1px solid #e0e0e0; white-space: nowrap;
+}
+td { padding: 8px 8px; border-bottom: 1px solid #f1f3f4; vertical-align: middle; }
+tr:hover td { background: #fafafa; }
+.tbl-input {
+  width: 100%; border: none; border-bottom: 1px solid #dadce0;
+  padding: 4px 2px; font-size: 13px; color: #202124;
+  background: transparent; outline: none;
+}
+.tbl-input:focus { border-bottom: 2px solid #1a73e8; }
+.tbl-textarea {
+  min-height: 44px;
+  resize: none;
+  overflow: hidden;
+  border: none !important;
+  border-bottom: 1px solid #dadce0 !important;
+  border-radius: 0 !important;
+  padding: 6px 4px !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  font-size: 13px !important;
+  line-height: 1.5;
+}
+.tbl-textarea:focus {
+  border-bottom: 2px solid #1a73e8 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+.tbl-select {
+  width: 100%; border: none; border-bottom: 1px solid #dadce0;
+  padding: 4px 20px 4px 2px; font-size: 13px; background: transparent;
+  cursor: pointer; outline: none;
+  -webkit-appearance: auto; appearance: auto;
+  text-overflow: ellipsis; overflow: hidden; white-space: nowrap;
+}
+.row-num { color: #9aa0a6; font-size: 12px; text-align: center; width: 24px; }
+.remove-btn {
+  background: none; border: none; color: #d93025;
+  cursor: pointer; padding: 2px 4px; font-size: 16px; border-radius: 4px; line-height: 1;
+}
+.remove-btn:hover { background: #fce8e6; }
+.add-btn {
+  display: flex; align-items: center; gap: 6px; font-size: 13px;
+  color: #1a73e8; background: none; border: none; cursor: pointer;
+  padding: 8px 4px; border-radius: 4px; margin-top: 4px;
+}
+.add-btn:hover { background: #e8f0fe; }
+.tbl-totals {
+  background: #f8f9fa; border-radius: 4px; padding: 8px 12px;
+  font-size: 12px; color: #5f6368; display: none;
+  justify-content: space-between; margin-top: 6px;
+}
+.tbl-totals strong { color: #202124; }
+
+/* Date derived box */
+.derived-box {
+  background: #f8f9fa; border: 1px solid #e8eaed;
+  border-radius: 6px; padding: 12px 16px; margin-top: 10px; display: none;
+}
+.derived-box.visible { display: block; }
+.derived-row { display: flex; gap: 24px; flex-wrap: wrap; }
+.derived-item { display: flex; flex-direction: column; }
+.derived-label { font-size: 11px; color: #5f6368; text-transform: uppercase; letter-spacing: .05em; margin-bottom: 2px; }
+.derived-value { font-size: 14px; color: #202124; font-weight: 500; }
+.late-badge {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-size: 12px; padding: 4px 10px; border-radius: 4px; margin-top: 8px;
+}
+.late-ok   { background: #e6f4ea; color: #137333; border: 1px solid #b7dfbf; }
+.late-warn { background: #fef7e0; color: #b06000; border: 1px solid #fce8b2; }
+.late-info { background: #e8f0fe; color: #1a73e8; border: 1px solid #c5d6fc; }
+
+/* Coordinator name */
+.name-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+/* Submit */
+.submit-btn {
+  background: #22378C; color: #fff; border: none;
+  padding: 12px 32px; border-radius: 4px; font-size: 15px;
+  cursor: pointer; transition: background .15s; margin-top: 8px;
+}
+.submit-btn:hover { background: #1a2f75; }
+.submit-btn:disabled { background: #80868b; cursor: not-allowed; }
+
+/* Errors */
+.error-msg { font-size: 12px; color: #d93025; margin-top: 4px; display: none; }
+.field-error { border-bottom-color: #d93025 !important; }
+
+/* Success */
+.success-screen {
+  display: none; background: #fff; border-radius: 8px;
+  padding: 40px 32px; text-align: center;
+  box-shadow: 0 1px 3px rgba(0,0,0,.1);
+}
+.success-screen.visible { display: block; }
+.success-icon { font-size: 48px; margin-bottom: 16px; }
+.success-title { font-size: 22px; color: #137333; margin-bottom: 8px; }
+.success-sub { font-size: 14px; color: #5f6368; line-height: 1.6; }
+
+/* Progress bar */
+.progress-wrap { background: #e0e0e0; height: 4px; border-radius: 2px; margin-bottom: 20px; }
+.progress-bar { background: #22378C; height: 100%; border-radius: 2px; transition: width .3s; }
+
+/* Spinner */
+.spinner { display: none; width: 20px; height: 20px; border: 2px solid #fff; border-top-color: transparent; border-radius: 50%; animation: spin .6s linear infinite; margin-left: 8px; vertical-align: middle; }
+@keyframes spin { to { transform: rotate(360deg); } }
+</style>
+</head>
+<body>
+<div class="form-wrap" id="form-wrap">
+
+  <!-- Header -->
+  <div class="form-header">
+    <h1>CRP/DRN Weekly Reporting</h1>
+    <p>Conflict Resolution Program &nbsp;·&nbsp; Democracy Resilience Networks</p>
+    <p class="intro">
+      Thank you for submitting your report. Your responses help us track STAR program indicators
+      and understand the reach and impact of DRN activities. Please answer all questions.
+      For numeric fields where the answer is none or zero, enter <strong>0</strong> rather than
+      leaving it blank. Blank fields are treated as missing data.
+    </p>
+  </div>
+
+  <!-- Progress -->
+  <div class="progress-wrap">
+    <div class="progress-bar" id="progress-bar" style="width:0%"></div>
+  </div>
+
+  <form id="main-form" novalidate>
+
+    <!-- ── SECTION 1 ── -->
+    <div class="card">
+      <div class="section-title">Section 1 — Reporting Period</div>
+
+      <!-- Q1 State -->
+      <div class="q-block">
+        <div class="q-label">Q1 &nbsp; Please select your state. <span class="req">*</span></div>
+        <div class="radio-group" id="q1-state">
+          <label class="radio-opt"><input type="radio" name="state" value="Arizona" onchange="updateProgress()"> Arizona</label>
+          <label class="radio-opt"><input type="radio" name="state" value="Florida" onchange="updateProgress()"> Florida</label>
+          <label class="radio-opt"><input type="radio" name="state" value="Georgia" onchange="updateProgress()"> Georgia</label>
+          <label class="radio-opt"><input type="radio" name="state" value="Michigan" onchange="updateProgress()"> Michigan</label>
+          <label class="radio-opt"><input type="radio" name="state" value="Nevada" onchange="updateProgress()"> Nevada</label>
+          <label class="radio-opt"><input type="radio" name="state" value="North Carolina" onchange="updateProgress()"> North Carolina</label>
+          <label class="radio-opt"><input type="radio" name="state" value="Pennsylvania" onchange="updateProgress()"> Pennsylvania</label>
+          <label class="radio-opt"><input type="radio" name="state" value="Wisconsin" onchange="updateProgress()"> Wisconsin</label>
+          <label class="radio-opt"><input type="radio" name="state" value="Faith Forward Democracy (FFD)" onchange="updateProgress()"> Faith Forward Democracy (FFD)</label>
+        </div>
+        <div class="error-msg" id="err-state">Please select your state.</div>
+      </div>
+
+      <!-- Q1b Lead(s) this report covers -->
+      <div class="q-block">
+        <div class="q-label">Q1b &nbsp; This report describes the work of: <span class="req">*</span></div>
+        <div class="q-hint">This is the name of the lead(s) whose work this report is about — not necessarily whoever is filling out this form. If you're submitting on someone's behalf, enter their name here.</div>
+        <input type="text" id="first-name" placeholder="e.g. Jane Doe" oninput="updateProgress()" style="max-width:320px">
+        <input type="hidden" id="last-name" value="">
+        <div class="error-msg" id="err-name">Please enter the name of the lead(s) this report covers.</div>
+      </div>
+
+      <!-- Q2 Reporting period -->
+      <div class="q-block">
+        <div class="q-label">Q2 &nbsp; Please select a day within your reporting period. <span class="req">*</span></div>
+        <div class="q-hint">Pick any day in the week/month for which you are reporting. The system identifies the correct week/month automatically.</div>
+        <div style="display:flex;align-items:center;gap:12px;margin-top:6px;">
+          <div style="position:relative;display:inline-flex;align-items:center;">
+            <span style="font-size:28px;margin-right:8px;cursor:pointer;user-select:none;" onclick="document.getElementById('report-date').showPicker()">&#128197;</span>
+            <div style="display:flex;flex-direction:column;">
+              <span style="font-size:11px;color:#5f6368;font-weight:500;letter-spacing:.04em;text-transform:uppercase;margin-bottom:2px;">Select date</span>
+              <input type="date" id="report-date" onchange="onDateChange(this.value); updateProgress()"
+                style="font-size:15px;padding:6px 10px;border:1.5px solid #dadce0;border-radius:6px;background:#fff;cursor:pointer;color:#202124;width:auto;">
+            </div>
+          </div>
+        </div>
+        <div class="derived-box" id="derived-box">
+          <div class="derived-row">
+            <div class="derived-item"><span class="derived-label">Reporting week</span><span class="derived-value" id="d-week"></span></div>
+            <div class="derived-item"><span class="derived-label">Month</span><span class="derived-value" id="d-month"></span></div>
+            <div class="derived-item"><span class="derived-label">Year</span><span class="derived-value" id="d-year"></span></div>
+            <div class="derived-item"><span class="derived-label">Week #</span><span class="derived-value" id="d-weeknum"></span></div>
+          </div>
+          <div id="late-indicator"></div>
+        </div>
+        <div class="error-msg" id="err-date">Please select a reporting date.</div>
+      </div>
+    </div>
+
+    <!-- ── SECTION 2 ── -->
+    <div class="card">
+      <div class="section-title">Section 2 — Events, Speaking Engagements and Media</div>
+
+      <!-- Q3 DRN events -->
+      <div class="q-block">
+        <div class="q-label">Q3 &nbsp; Did the DRN host, sponsor or facilitate an event this week? <span class="req">*</span></div>
+        <div class="q-hint">Includes workshops, webinars, Lunch &amp; Learns, other DRN member meetings, community forums, etc. These are events the DRN had a role in organizing or convening, not others' events you were invited to attend or present at (see Q4).</div>
+        <div class="radio-group">
+          <label class="radio-opt"><input type="radio" name="q3" value="yes" onchange="toggle('q3-table',true); updateProgress()"> Yes</label>
+          <label class="radio-opt"><input type="radio" name="q3" value="no"  onchange="toggle('q3-table',false); updateProgress()"> No</label>
+        </div>
+        <div class="conditional" id="q3-table">
+          <div class="q-label">Please complete one row per event. <span class="req">*</span></div>
+          <div class="q-hint">Include event name, topic, format (in-person or virtual) and DRN's role. Report attendees not registrants — enter 0 if unknown.</div>
+          <div class="tbl-wrap">
+            <table id="events-table">
+              <thead><tr>
+                <th style="width:22px">#</th>
+                <th style="width:32%">Event name &amp; description</th>
+                <th style="width:12%">Format</th>
+                <th style="width:15%">DRN's role</th>
+                <th style="width:11%">Attendees *</th>
+                <th style="width:22%">Location / platform</th>
+                <th style="width:22px"></th>
+              </tr></thead>
+              <tbody id="events-rows"></tbody>
+            </table>
+          </div>
+          <button type="button" class="add-btn" onclick="addEventRow()">+ Add another event</button>
+          <div class="tbl-totals" id="events-totals">
+            <span>Events: <strong id="events-count">0</strong></span>
+            <span>Total attendees: <strong id="events-attendees">0</strong></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Q4 Speaking invitations -->
+      <div class="q-block">
+        <div class="q-label">Q4 &nbsp; Did the DRN receive any speaking invitations or advisory requests this week? <span class="req">*</span></div>
+        <div class="q-hint">e.g. invited to speak at a civic or faith organization, presenting to legislators or election officials, participating in a university or conference panel, advising a government body or coalition, invited to a closed-door meeting or swearing-in ceremony, or asked to join an advisory board or coalition working group</div>
+        <div class="q-hint" style="font-style:italic;">Don't log media hits here; you'll report them next (in Q5).</div>
+        <div class="radio-group">
+          <label class="radio-opt"><input type="radio" name="q4" value="yes" onchange="toggle('q4-detail',true); updateProgress()"> Yes</label>
+          <label class="radio-opt"><input type="radio" name="q4" value="no"  onchange="toggle('q4-detail',false); updateProgress()"> No</label>
+        </div>
+        <div class="conditional" id="q4-detail">
+          <div class="q-label" style="margin-bottom:4px">Please complete one row per speaking invitation or advisory request.</div>
+          <div class="q-hint">Enter 0 for audience size if unknown.</div>
+          <div class="tbl-wrap">
+            <table id="speaking-table">
+              <thead><tr>
+                <th style="width:22px">#</th>
+                <th style="width:33%">Event or opportunity description</th>
+                <th style="width:19%">Organization / host</th>
+                <th style="width:13%">Type</th>
+                <th style="width:18%">Date</th>
+                <th style="width:10%">Audience size</th>
+                <th style="width:22px"></th>
+              </tr></thead>
+              <tbody id="speaking-rows"></tbody>
+            </table>
+          </div>
+          <button type="button" class="add-btn" onclick="addSpeakingRow()">+ Add another invitation</button>
+          <div class="tbl-totals" id="speaking-totals">
+            <span>Invitations: <strong id="speaking-count">0</strong></span>
+          </div>
+          <input type="hidden" id="q4-audience" value="0">
+          <input type="hidden" id="q4-desc" value="">
+        </div>
+      </div>
+
+      <!-- Q5 Media hits -->
+      <div class="q-block">
+        <div class="q-label">Q5 &nbsp; Did the DRN secure any media hits this week? <span class="req">*</span></div>
+        <div class="q-hint">A media hit is any print, online, broadcast, or podcast coverage that mentions the DRN or The Carter Center. Please report hits once they've aired or published. If timing is unknown, log it as pending, then log it again once it runs, noting it's an update to a previous entry.</div>
+        <div class="radio-group">
+          <label class="radio-opt"><input type="radio" name="q5" value="yes" onchange="toggle('q5-table',true); updateProgress()"> Yes</label>
+          <label class="radio-opt"><input type="radio" name="q5" value="no"  onchange="toggle('q5-table',false); updateProgress()"> No</label>
+        </div>
+        <div class="conditional" id="q5-table">
+          <div class="q-label">Please complete one row per media hit. <span class="req">*</span></div>
+          <div class="q-hint">Add one row per media hit. Link is optional — paste if available.</div>
+          <div class="tbl-wrap">
+            <table id="media-table">
+              <thead><tr>
+                <th style="width:22px">#</th>
+                <th style="width:24%">Outlet name</th>
+                <th style="width:12%">Date ran</th>
+                <th style="width:14%">Type</th>
+                <th style="width:32%">Link to story (if available)</th>
+                <th style="width:20%">Additional information</th>
+                <th style="width:22px"></th>
+              </tr></thead>
+              <tbody id="media-rows"></tbody>
+            </table>
+          </div>
+          <button type="button" class="add-btn" onclick="addMediaRow()">+ Add another media hit</button>
+          <div class="tbl-totals" id="media-totals">
+            <span>Media hits: <strong id="media-count">0</strong></span>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── SECTION 3 ── -->
+    <div class="card">
+      <div class="section-title">Section 3 — Network Growth</div>
+
+      <!-- Q6 New members -->
+      <div class="q-block">
+        <div class="q-label">Q6 &nbsp; How many new members joined this week? <span class="req">*</span></div>
+        <div class="q-hint">Enter 0 if no new members were added to the CRM. Do not leave blank — blank fields are treated as missing data.</div>
+        <div class="input-inline">
+          <label>Number of new members:</label>
+          <input type="number" id="q6-members" min="0" placeholder="0" oninput="onMembersChange(); updateProgress()">
+        </div>
+        <div class="error-msg" id="err-members">Please enter a number. Use 0 if none.</div>
+        <div id="crm-notice" style="display:none;margin-top:10px;font-size:12px;background:#e8f0fe;border:1px solid #c5d6fc;border-radius:4px;padding:8px 12px;color:#1a73e8;">
+          The CRM team will be notified of this new member count automatically on submission.
+        </div>
+      </div>
+
+      <!-- Q7 New partnerships -->
+      <div class="q-block">
+        <div class="q-label">Q7 &nbsp; Did the network form any new partnerships this week? <span class="req">*</span></div>
+        <div class="q-hint">You don't have to have all the details worked out. So long as there's a mutual commitment to collaborate, report the new partnership.</div>
+        <div class="radio-group">
+          <label class="radio-opt"><input type="radio" name="q7" value="yes" onchange="toggle('q7-detail',true); updateProgress()"> Yes</label>
+          <label class="radio-opt"><input type="radio" name="q7" value="no"  onchange="toggle('q7-detail',false); updateProgress()"> No</label>
+        </div>
+        <div class="conditional" id="q7-detail">
+          <div class="q-label">How many new partnerships were formed? <span class="req">*</span></div>
+          <input type="number" id="q7-count" min="0" placeholder="0" style="max-width:100px;margin-bottom:14px">
+          <div class="q-label">Please name each new partner and briefly describe your plans as far as they've been developed. <span class="req">*</span></div>
+          <textarea id="q7-desc" placeholder="e.g. Arizona Clean Elections Commission — will co-host three voter readiness workshops in Q3..."></textarea>
+        </div>
+      </div>
+
+      <!-- Q8 New roles -->
+      <div class="q-block">
+        <div class="q-label">Q8 &nbsp; Did any members take on a new role or responsibility within the DRN this week? <span class="req">*</span></div>
+        <div class="q-hint">e.g. volunteering to lead event planning, joining a recruitment effort, taking on an ambassador role, organizing a subgroup or committee</div>
+        <div class="radio-group">
+          <label class="radio-opt"><input type="radio" name="q8" value="yes" onchange="toggle('q8-detail',true); updateProgress()"> Yes</label>
+          <label class="radio-opt"><input type="radio" name="q8" value="no"  onchange="toggle('q8-detail',false); updateProgress()"> No</label>
+        </div>
+        <div class="conditional" id="q8-detail">
+          <div class="q-label">Describe the group or effort: what it's called (if it has a name), what they're doing, and how many people are involved. <span class="req">*</span></div>
+          <textarea id="q8-desc" placeholder="e.g. 3 DRN members volunteered to lead outreach efforts for the upcoming faith community event series..."></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── SECTION 4 ── -->
+    <div class="card">
+      <div class="section-title">Section 4 — Challenges and Additional Context</div>
+
+      <!-- Q9 Challenges -->
+      <div class="q-block">
+        <div class="q-label">Q9 &nbsp; Did the DRN face any significant challenges or obstacles this week, or is there support you could use from TCC or another DRN? <span class="req">*</span></div>
+        <div class="q-hint">e.g. community tensions, resource constraints, low attendance, political pressure, or a specific ask for peer support — whether connected to a challenge above or on its own</div>
+        <div class="radio-group">
+          <label class="radio-opt"><input type="radio" name="q9" value="yes" onchange="toggle('q9-detail',true); updateProgress()"> Yes</label>
+          <label class="radio-opt"><input type="radio" name="q9" value="no"  onchange="toggle('q9-detail',false); updateProgress()"> No</label>
+        </div>
+        <div class="conditional" id="q9-detail">
+          <div class="q-label">Briefly describe the challenge, support need, and any steps already taken. <span class="req">*</span></div>
+          <textarea id="q9-desc" placeholder="e.g. Key partner withdrew from upcoming event due to scheduling conflict — exploring alternative venues and dates. Would welcome ideas from another DRN who's navigated something similar..."></textarea>
+        </div>
+      </div>
+
+      <!-- Q10 Additional info -->
+      <div class="q-block">
+        <div class="q-label">Q10 &nbsp; Is there anything additional you would like to share?</div>
+        <div class="q-hint">e.g. significant interactions not already captured; recruitment or relationship-building efforts, including at events you attended; violence mitigation and crisis management activities; examples of how the DRN is bridging divides or reducing polarization; anecdotes or quotes about how this work is making a difference.</div>
+        <div class="radio-group">
+          <label class="radio-opt"><input type="radio" name="q10" value="yes" onchange="toggle('q10-detail',true); updateProgress()"> Yes</label>
+          <label class="radio-opt"><input type="radio" name="q10" value="no"  onchange="toggle('q10-detail',false); updateProgress()"> No</label>
+        </div>
+        <div class="conditional" id="q10-detail">
+          <div class="q-label">Please share below.</div>
+          <textarea id="q10-desc" placeholder="Share anything else worth noting this week..."></textarea>
+        </div>
+      </div>
+
+      <!-- Q11 Quarterly achievements — shown only in the final week of a quarter, driven by the Q2 date -->
+      <div class="q-block" id="q11-block" style="display:none;">
+        <div class="q-label">Q11 &nbsp; What were the DRN's three biggest achievements this past quarter?</div>
+        <div style="margin-top:10px;">
+          <label style="display:block;font-size:13px;color:#5f6368;margin-bottom:4px;">Achievement 1 <span class="req">*</span></label>
+          <textarea id="q11-achievement-1" placeholder="e.g. Helped de-escalate a tense situation before it turned violent" oninput="updateProgress()" style="min-height:50px;margin-bottom:14px;"></textarea>
+          <label style="display:block;font-size:13px;color:#5f6368;margin-bottom:4px;">Achievement 2</label>
+          <textarea id="q11-achievement-2" placeholder="e.g. Secured a major new partnership" style="min-height:50px;margin-bottom:14px;"></textarea>
+          <label style="display:block;font-size:13px;color:#5f6368;margin-bottom:4px;">Achievement 3</label>
+          <textarea id="q11-achievement-3" placeholder="e.g. Hosted a well-attended community forum" style="min-height:50px;"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- Submit -->
+    <div class="card" style="text-align:center">
+      <div id="form-errors" style="color:#d93025;font-size:13px;margin-bottom:16px;display:none;text-align:left;background:#fce8e6;padding:12px 16px;border-radius:4px;"></div>
+      <button type="button" class="submit-btn" id="submit-btn" onclick="submitForm()">
+        Submit Report <span class="spinner" id="submit-spinner"></span>
+      </button>
+      <p id="submit-wait-msg" style="display:none;font-size:12.5px;color:#5f6368;margin-top:10px;font-style:italic;">Submitting — please wait, this can take a moment.</p>
+      <p style="font-size:12px;color:#5f6368;margin-top:12px">CRP/DRN Weekly Reporting &nbsp;·&nbsp; The Carter Center &amp; Root Change</p>
+    </div>
+
+  </form>
+
+  <!-- Success screen -->
+  <div class="success-screen" id="success-screen">
+    <div class="success-icon">✓</div>
+    <div class="success-title">Report submitted successfully</div>
+    <div class="success-sub" id="success-details"></div>
+    <button type="button" class="submit-btn" style="margin-top:24px" onclick="resetForm()">Submit another report</button>
+  </div>
+
+</div>
+
+<script>
+// ── AUTO-GROW TEXTAREAS ──────────────────────────────────────
+function autoGrow(el) {
+  requestAnimationFrame(function() {
+    el.style.height = 'auto';
+    var minH = el.classList.contains('tbl-textarea') ? 44 : 110;
+    var h = Math.max(el.scrollHeight, minH);
+    el.style.height = h + 'px';
+  });
+}
+function initAutoGrow() {
+  document.querySelectorAll('textarea').forEach(function(ta) {
+    if (!ta._growInited) {
+      ta.addEventListener('input', function() { autoGrow(this); });
+      ta._growInited = true;
+    }
+    // Only resize if visible
+    if (ta.offsetHeight > 0) autoGrow(ta);
+  });
+}
+
+// ── CONFIG ──────────────────────────────────────────────────
+// Replace with your deployed Apps Script web app URL
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx-9DRZ2MVqCe7DZZqDCNGII_3aGZKgE5WsIJ3lsOVF4ikxtH4jcwUti-XUNySOgZ4I/exec';
+
+// ── DATE HELPERS ────────────────────────────────────────────
+function getWeekBounds(dateStr) {
+  const d = new Date(dateStr + 'T12:00:00');
+  const day = d.getDay();
+  const mon = new Date(d); mon.setDate(d.getDate() - ((day + 6) % 7));
+  const sun = new Date(mon); sun.setDate(mon.getDate() + 6);
+  return { mon, sun };
+}
+function getWeekNumber(dateStr) {
+  const d = new Date(dateStr + 'T12:00:00');
+  const start = new Date(d.getFullYear(), 0, 1);
+  return Math.ceil(((d - start) / 86400000 + start.getDay() + 1) / 7);
+}
+function fmt(d, opts) { return d.toLocaleDateString('en-US', opts); }
+
+// If the Mon–Sun week [mon, sun] contains a quarter-end date (Mar 31,
+// Jun 30, Sep 30, Dec 31), returns which quarter/year that is — else null.
+// Checks candidate quarter-ends in both mon's and sun's calendar year,
+// since a week can span a Dec 31 / Jan 1 boundary.
+function getQuarterEndMatch(mon, sun) {
+  const years = new Set([mon.getFullYear(), sun.getFullYear()]);
+  const ends = [
+    { quarter: 'Q1', month: 2,  day: 31 },
+    { quarter: 'Q2', month: 5,  day: 30 },
+    { quarter: 'Q3', month: 8,  day: 30 },
+    { quarter: 'Q4', month: 11, day: 31 },
+  ];
+  for (const y of years) {
+    for (const e of ends) {
+      const d = new Date(y, e.month, e.day, 12, 0, 0);
+      if (d >= mon && d <= sun) return { quarter: e.quarter, year: y };
+    }
+  }
+  return null;
+}
+
+function onDateChange(val) {
+  if (!val) return;
+  const { mon, sun } = getWeekBounds(val);
+  const weekNum = getWeekNumber(val);
+  const d = new Date(val + 'T12:00:00');
+  document.getElementById('d-week').textContent =
+    fmt(mon,{month:'short',day:'numeric'}) + ' – ' + fmt(sun,{month:'short',day:'numeric',year:'numeric'});
+  document.getElementById('d-month').textContent = fmt(d,{month:'long',year:'numeric'});
+  document.getElementById('d-year').textContent  = d.getFullYear();
+  document.getElementById('d-weeknum').textContent = 'Week ' + weekNum;
+  const today = new Date(); today.setHours(12,0,0,0);
+  const daysLate = Math.round((today - sun) / 86400000);
+  const lateEl = document.getElementById('late-indicator');
+  // Monthly reporters (Wisconsin, NC, FFD) — do not flag late submissions
+  const selectedState = document.querySelector('input[name=state]:checked')?.value || '';
+  const monthlyReporters = ['Wisconsin', 'North Carolina', 'Faith Forward Democracy (FFD)'];
+  if (monthlyReporters.includes(selectedState)) {
+    lateEl.innerHTML = '<div class="late-badge late-ok">&#10003; Monthly reporting period selected</div>';
+  } else if (daysLate <= 3) {
+    lateEl.innerHTML = '<div class="late-badge late-ok">&#10003; On time submission</div>';
+  } else if (daysLate <= 21) {
+    lateEl.innerHTML = '<div class="late-badge late-warn">&#9888; Late submission — ' + daysLate + ' days after reporting week ended</div>';
+  } else {
+    lateEl.innerHTML = '<div class="late-badge late-info">&#9432; Historical report — ' + Math.round(daysLate/7) + ' weeks after reporting period</div>';
+  }
+  document.getElementById('derived-box').classList.add('visible');
+
+  // Q11 only exists during the final week of a quarter — driven entirely
+  // by the date picked here, not a manual toggle. The matched quarter/year
+  // is stashed on the block itself so collectData() can read it later.
+  const q11Block = document.getElementById('q11-block');
+  const q11Match = getQuarterEndMatch(mon, sun);
+  if (q11Match) {
+    q11Block.style.display = 'block';
+    q11Block.dataset.quarter = q11Match.quarter;
+    q11Block.dataset.year = q11Match.year;
+  } else {
+    q11Block.style.display = 'none';
+    q11Block.dataset.quarter = '';
+    q11Block.dataset.year = '';
+    // Clear any prior answers so they can't be submitted invisibly if the
+    // person picks a quarter-end date, answers, then changes the date.
+    document.getElementById('q11-achievement-1').value = '';
+    document.getElementById('q11-achievement-2').value = '';
+    document.getElementById('q11-achievement-3').value = '';
+  }
+}
+
+// ── TOGGLE CONDITIONALS ─────────────────────────────────────
+function toggle(id, show) {
+  const el = document.getElementById(id);
+  el.classList.toggle('visible', show);
+  if (show && id === 'q3-table'    && document.getElementById('events-rows').children.length === 0)   addEventRow();
+  if (show && id === 'q5-table'    && document.getElementById('media-rows').children.length === 0)    addMediaRow();
+  if (show && id === 'q4-detail'   && document.getElementById('speaking-rows').children.length === 0) addSpeakingRow();
+  // When section opens, attach listeners and resize any textareas inside it
+  if (show) {
+    setTimeout(function() {
+      el.querySelectorAll('textarea').forEach(function(ta) {
+        if (!ta._growInited) {
+          ta.addEventListener('input', function() { autoGrow(this); });
+          ta._growInited = true;
+        }
+        autoGrow(ta);
+      });
+    }, 60);
+  }
+  if (show) setTimeout(initAutoGrow, 50);
+}
+
+// ── CRM NOTICE ──────────────────────────────────────────────
+function onMembersChange() {
+  const val = parseInt(document.getElementById('q6-members').value) || 0;
+  document.getElementById('crm-notice').style.display = val > 0 ? 'block' : 'none';
+}
+
+// ── EVENTS TABLE ────────────────────────────────────────────
+let eventRowCount = 0;
+function addEventRow() {
+  eventRowCount++;
+  const n = eventRowCount;
+  const tr = document.createElement('tr');
+  tr.id = 'erow-' + n;
+  tr.innerHTML =
+    '<td class="row-num">' + n + '</td>' +
+    '<td><textarea class="tbl-input tbl-textarea" placeholder="Event name and brief description, including topic or purpose" oninput="autoGrow(this)"></textarea></td>' +
+    '<td><select class="tbl-select" onchange="updateEventTotals()"><option value="">Select…</option><option>In-person</option><option>Virtual</option><option>Hybrid</option></select></td>' +
+    '<td><select class="tbl-select" onchange="updateEventTotals()"><option value="">Select…</option><option>Host</option><option>Facilitator</option><option>Sponsor</option></select></td>' +
+    '<td><input class="tbl-input" type="number" min="0" placeholder="0" style="max-width:60px" oninput="updateEventTotals()"></td>' +
+    '<td><textarea class="tbl-input tbl-textarea" placeholder="e.g. Atlanta, GA or Zoom" oninput="autoGrow(this)"></textarea></td>' +
+    '<td><button type="button" class="remove-btn" onclick="removeRow(this)" data-tbody="events-rows" data-fn="updateEventTotals">&#215;</button></td>';
+  document.getElementById('events-rows').appendChild(tr);
+  updateEventTotals();
+}
+function updateEventTotals() {
+  const rows = document.querySelectorAll('#events-rows tr');
+  let att = 0;
+  rows.forEach(r => { att += parseInt(r.querySelector('input[type=number]')?.value) || 0; });
+  document.getElementById('events-count').textContent = rows.length;
+  document.getElementById('events-attendees').textContent = att.toLocaleString();
+  document.getElementById('events-totals').style.display = rows.length ? 'flex' : 'none';
+}
+
+// ── SPEAKING TABLE ──────────────────────────────────────────
+let speakingRowCount = 0;
+function addSpeakingRow() {
+  speakingRowCount++;
+  const n = speakingRowCount;
+  const tr = document.createElement('tr');
+  tr.id = 'srow-' + n;
+  tr.innerHTML =
+    '<td class="row-num">' + n + '</td>' +
+    '<td><textarea class="tbl-input tbl-textarea" placeholder="e.g. Invited to present on election integrity at Faith Leaders Forum" oninput="autoGrow(this)"></textarea></td>' +
+    '<td><textarea class="tbl-input tbl-textarea" placeholder="e.g. Interfaith Coalition" oninput="autoGrow(this)"></textarea></td>' +
+    '<td><select class="tbl-select" onchange="updateSpeakingTotals()"><option value="">Select…</option><option>Speaking invitation</option><option>Panel participation</option><option>Advisory request</option><option>Legislative briefing</option><option>Conference presentation</option><option>Other</option></select></td>' +
+    '<td><input class="tbl-input" type="date" style="min-width:120px"></td>' +
+    '<td><input class="tbl-input" type="number" min="0" placeholder="0" style="max-width:60px" oninput="updateSpeakingTotals()"></td>' +
+    '<td><button type="button" class="remove-btn" onclick="removeRow(this)" data-tbody="speaking-rows" data-fn="updateSpeakingTotals">&#215;</button></td>';
+  document.getElementById('speaking-rows').appendChild(tr);
+  updateSpeakingTotals();
+}
+function updateSpeakingTotals() {
+  const rows = document.querySelectorAll('#speaking-rows tr');
+  document.getElementById('speaking-count').textContent = rows.length;
+  document.getElementById('speaking-totals').style.display = rows.length ? 'flex' : 'none';
+}
+
+// Also auto-add first speaking row when section opens
+const origToggle = window.toggle;
+// ── MEDIA TABLE ─────────────────────────────────────────────
+let mediaRowCount = 0;
+function addMediaRow() {
+  mediaRowCount++;
+  const n = mediaRowCount;
+  const tr = document.createElement('tr');
+  tr.id = 'mrow-' + n;
+  tr.innerHTML =
+    '<td class="row-num">' + n + '</td>' +
+    '<td><textarea class="tbl-input tbl-textarea" placeholder="e.g. Tampa Bay Times" oninput="autoGrow(this)"></textarea></td>' +
+    '<td><input class="tbl-input" type="date" oninput="updateMediaTotals()"></td>' +
+    '<td><select class="tbl-select" onchange="updateMediaTotals()"><option value="">Select…</option><option>Online article</option><option>Print article</option><option>TV segment</option><option>Radio segment</option><option>Podcast</option><option>Newsletter</option><option>Social media</option><option>Other</option></select></td>' +
+    '<td><input class="tbl-input" type="url" placeholder="https://… (optional)"></td>' +
+    '<td><textarea class="tbl-input tbl-textarea" placeholder="DRN lead(s) mentioned, context, subject, or other notes (optional)" oninput="autoGrow(this)"></textarea></td>' +
+    '<td><button type="button" class="remove-btn" onclick="removeRow(this)" data-tbody="media-rows" data-fn="updateMediaTotals">&#215;</button></td>';
+  document.getElementById('media-rows').appendChild(tr);
+  updateMediaTotals();
+}
+function updateMediaTotals() {
+  const rows = document.querySelectorAll('#media-rows tr');
+  document.getElementById('media-count').textContent = rows.length;
+  document.getElementById('media-totals').style.display = rows.length ? 'flex' : 'none';
+}
+
+function removeRow(btn) {
+  const tbody = btn.getAttribute('data-tbody');
+  const fn    = btn.getAttribute('data-fn');
+  btn.closest('tr').remove();
+  window[fn]?.();
+  renumberRows(tbody);
+}
+function renumberRows(tbodyId) {
+  document.querySelectorAll('#' + tbodyId + ' tr').forEach((r,i) => {
+    const n = r.querySelector('.row-num'); if(n) n.textContent = i+1;
+  });
+}
+
+// ── PROGRESS ────────────────────────────────────────────────
+function updateProgress() {
+  const checks = [
+    !!document.querySelector('input[name=state]:checked'),
+    !!document.getElementById('first-name').value.trim(),
+    !!document.getElementById('report-date').value,
+    !!document.querySelector('input[name=q3]:checked'),
+    !!document.querySelector('input[name=q4]:checked'),
+    !!document.querySelector('input[name=q5]:checked'),
+    document.getElementById('q6-members').value !== '',
+    !!document.querySelector('input[name=q7]:checked'),
+    !!document.querySelector('input[name=q8]:checked'),
+    !!document.querySelector('input[name=q9]:checked'),
+  ];
+  // Only counts toward progress when the block is actually showing —
+  // most weeks it's hidden and shouldn't affect the denominator at all.
+  if (document.getElementById('q11-block').style.display !== 'none') {
+    checks.push(!!document.getElementById('q11-achievement-1').value.trim());
+  }
+  const pct = Math.round(checks.filter(Boolean).length / checks.length * 100);
+  document.getElementById('progress-bar').style.width = pct + '%';
+}
+
+// ── VALIDATION ───────────────────────────────────────────────
+function validate() {
+  let errors = [];
+  const hide = id => { const el=document.getElementById(id); if(el) el.style.display='none'; };
+  const show = (id,msg) => { const el=document.getElementById(id); if(el) el.style.display='block'; errors.push(msg); };
+
+  hide('err-state'); hide('err-name'); hide('err-date'); hide('err-members');
+
+  if (!document.querySelector('input[name=state]:checked')) show('err-state','Please select your state.');
+  if (!document.getElementById('first-name').value.trim())  show('err-name','Please enter the name of the lead(s) this report covers.');
+  if (!document.getElementById('report-date').value)       show('err-date','Please select a reporting date.');
+  if (!document.querySelector('input[name=q3]:checked'))   errors.push('Q3: Please answer the events question.');
+  if (!document.querySelector('input[name=q4]:checked'))   errors.push('Q4: Please answer the speaking invitations question.');
+  if (!document.querySelector('input[name=q5]:checked'))   errors.push('Q5: Please answer the media hits question.');
+  if (document.getElementById('q6-members').value === '')  show('err-members','Please enter a number for new members.');
+  if (!document.querySelector('input[name=q7]:checked'))   errors.push('Q7: Please answer the partnerships question.');
+  if (!document.querySelector('input[name=q8]:checked'))   errors.push('Q8: Please answer the member roles question.');
+  if (!document.querySelector('input[name=q9]:checked'))   errors.push('Q9: Please answer the challenges/support question.');
+
+  // Table validation — if Yes selected, check at least one row has content
+  if (document.querySelector('input[name=q3]:checked')?.value === 'yes') {
+    const eventRows = document.querySelectorAll('#events-rows tr');
+    const hasEvent = Array.from(eventRows).some(row => {
+      const nameField = row.querySelector('textarea'); // first textarea per row is name/description
+      return nameField && nameField.value.trim();
+    });
+    if (!hasEvent) errors.push('Q3: Please add at least one event with a name and description.');
+  }
+  if (document.querySelector('input[name=q4]:checked')?.value === 'yes') {
+    const speakRows = document.querySelectorAll('#speaking-rows tr');
+    const hasSpeaking = Array.from(speakRows).some(row => {
+      const descField = row.querySelector('textarea'); // first textarea per row is the description
+      return descField && descField.value.trim();
+    });
+    if (!hasSpeaking) errors.push('Q4: Please add at least one speaking invitation with a description.');
+  }
+  if (document.querySelector('input[name=q5]:checked')?.value === 'yes') {
+    const mediaRows = document.querySelectorAll('#media-rows tr');
+    const hasMedia = Array.from(mediaRows).some(row => {
+      const outletField = row.querySelector('textarea'); // first textarea per row is the outlet name
+      return outletField && outletField.value.trim();
+    });
+    if (!hasMedia) errors.push('Q5: Please add at least one media hit with an outlet name.');
+  }
+  if (document.getElementById('q11-block').style.display !== 'none' && !document.getElementById('q11-achievement-1').value.trim()) {
+    errors.push('Q11: Please share at least one achievement (the first one is required).');
+  }
+
+  const errBox = document.getElementById('form-errors');
+  if (errors.length) {
+    errBox.style.display = 'block';
+    errBox.innerHTML = '<strong>Please complete the following before submitting:</strong><ul style="margin-top:6px;padding-left:18px">' +
+      errors.map(e => '<li style="margin-bottom:3px">' + e + '</li>').join('') + '</ul>';
+    errBox.scrollIntoView({ behavior:'smooth', block:'center' });
+    return false;
+  }
+  errBox.style.display = 'none';
+  return true;
+}
+
+// ── COLLECT DATA ─────────────────────────────────────────────
+function collectData() {
+  const dateVal = document.getElementById('report-date').value;
+  const { mon, sun } = getWeekBounds(dateVal);
+  const fmt2 = d => d.toLocaleDateString('en-US',{month:'short',day:'numeric'});
+  const weekStr = fmt2(mon) + ' – ' + fmt2(sun) + ', ' + sun.getFullYear();
+
+  // Events table — use nth-child selectors to avoid textarea/input mix-up
+  const events = [];
+  document.querySelectorAll('#events-rows tr').forEach(r => {
+    const cells = r.querySelectorAll('td');
+    events.push({
+      name:      cells[1]?.querySelector('textarea,input')?.value || '',
+      format:    cells[2]?.querySelector('select,input')?.value  || '',
+      role:      cells[3]?.querySelector('select,input')?.value  || '',
+      attendees: cells[4]?.querySelector('input')?.value         || '0',
+      location:  cells[5]?.querySelector('textarea,input')?.value|| '',
+    });
+  });
+
+  // Media table — use cell-based selectors
+  const media = [];
+  document.querySelectorAll('#media-rows tr').forEach(r => {
+    const cells = r.querySelectorAll('td');
+    media.push({
+      outlet:  cells[1]?.querySelector('textarea,input')?.value || '',
+      date:    cells[2]?.querySelector('input')?.value          || '',
+      type:    cells[3]?.querySelector('select')?.value         || '',
+      link:    cells[4]?.querySelector('input')?.value          || '',
+      notes:   cells[5]?.querySelector('textarea,input')?.value || '',
+    });
+  });
+
+  // Speaking table
+  const speaking = [];
+  document.querySelectorAll('#speaking-rows tr').forEach(r => {
+    const cells = r.querySelectorAll('td');
+    speaking.push({
+      description:  cells[1]?.querySelector('textarea,input')?.value || '',
+      organization: cells[2]?.querySelector('textarea,input')?.value || '',
+      type:         cells[3]?.querySelector('select')?.value         || '',
+      date:         cells[4]?.querySelector('input')?.value          || '',
+      audience:     cells[5]?.querySelector('input')?.value          || '0',
+    });
+  });
+
+  const totalAttendees = events.reduce((s,e) => s + (parseInt(e.attendees)||0), 0);
+  const totalReach     = 0;
+  const mediaCount     = media.length;
+  const speakingCount  = speaking.length;
+
+  return {
+    timestamp:       new Date().toISOString(),
+    state:           document.querySelector('input[name=state]:checked')?.value || '',
+    coordinator:     (document.getElementById('first-name').value + ' ' + document.getElementById('last-name').value).trim(),
+    report_date:     dateVal,
+    report_week:     weekStr,
+    report_month:    document.getElementById('d-month').textContent,
+    report_year:     document.getElementById('d-year').textContent,
+    week_number:     document.getElementById('d-weeknum').textContent,
+    // Q3
+    q3_has_events:      document.querySelector('input[name=q3]:checked')?.value || '',
+    q3_events:          JSON.stringify(events),
+    q3_total_attendees: totalAttendees,
+    // Q4
+    q4_speaking:        document.querySelector('input[name=q4]:checked')?.value || '',
+    q4_speaking_json:   JSON.stringify(speaking),
+    q4_speaking_count:  speakingCount || 0,
+    q4_speaking_desc:   document.getElementById('q4-desc')?.value || '',
+    q4_audience:        document.getElementById('q4-audience')?.value || '0',
+    // Q5
+    q5_media_hits:      document.querySelector('input[name=q5]:checked')?.value || '',
+    q5_media:           JSON.stringify(media),
+    q5_media_count:     mediaCount,
+    q5_total_reach:     totalReach,
+    // Q6
+    q6_new_members:     document.getElementById('q6-members').value || '0',
+    // Q7
+    q7_partnerships:    document.querySelector('input[name=q7]:checked')?.value || '',
+    q7_partner_count:   document.getElementById('q7-count')?.value || '0',
+    q7_partner_desc:    document.getElementById('q7-desc')?.value || '',
+    // Q8
+    q8_new_roles:       document.querySelector('input[name=q8]:checked')?.value || '',
+    q8_roles_desc:      document.getElementById('q8-desc')?.value || '',
+    // Q9
+    q9_challenges:      document.querySelector('input[name=q9]:checked')?.value || '',
+    q9_challenge_desc:  document.getElementById('q9-desc')?.value || '',
+    // Q10
+    q10_additional:     document.querySelector('input[name=q10]:checked')?.value || '',
+    q10_additional_desc:document.getElementById('q10-desc')?.value || '',
+    // Q11 (quarterly achievements — optional, only present in a quarter's final week)
+    q11_quarter:        document.getElementById('q11-block').dataset.quarter || '',
+    q11_year:           document.getElementById('q11-block').dataset.year || '',
+    q11_achievement_1:  document.getElementById('q11-achievement-1')?.value || '',
+    q11_achievement_2:  document.getElementById('q11-achievement-2')?.value || '',
+    q11_achievement_3:  document.getElementById('q11-achievement-3')?.value || '',
+  };
+}
+
+// ── SUBMIT ───────────────────────────────────────────────────
+async function submitForm() {
+  if (!validate()) return;
+  const btn     = document.getElementById('submit-btn');
+  const spinner = document.getElementById('submit-spinner');
+  const waitMsg = document.getElementById('submit-wait-msg');
+
+  // Real backend work happens in this order: save the report, then two
+  // sequential Claude calls (AI processing, then BWS classification) —
+  // this loosely mirrors that so the wait feels explained, not just
+  // "please hold." It's timed, not tied to real progress callbacks, so
+  // treat it as reassurance rather than a literal status readout.
+  const waitMessages = [
+    'Saving your report…',
+    'Reviewing this week\'s activities…',
+    'Checking for democracy-resilience activities…',
+    'Almost done…',
+  ];
+  let waitMsgIndex = 0;
+  waitMsg.textContent = waitMessages[0];
+  const waitMsgInterval = setInterval(() => {
+    waitMsgIndex = (waitMsgIndex + 1) % waitMessages.length;
+    waitMsg.textContent = waitMessages[waitMsgIndex];
+  }, 2800);
+
+  function resetBtn() {
+    clearInterval(waitMsgInterval);
+    btn.disabled = false;
+    spinner.style.display = 'none';
+    waitMsg.style.display = 'none';
+    btn.childNodes[0].textContent = 'Submit Report ';
+  }
+
+  btn.disabled = true;
+  spinner.style.display = 'inline-block';
+  waitMsg.style.display = 'block';
+  btn.childNodes[0].textContent = 'Submitting… ';
+
+  let data;
+  try {
+    data = collectData();
+  } catch(err) {
+    resetBtn();
+    document.getElementById('form-errors').style.display = 'block';
+    document.getElementById('form-errors').textContent = 'Error preparing data: ' + err.message;
+    return;
+  }
+
+  // 30-second timeout — Apps Script can be slow on cold start
+  const controller = new AbortController();
+  const timeout    = setTimeout(() => controller.abort(), 30000);
+
+  try {
+    await fetch(APPS_SCRIPT_URL, {
+      method:  'POST',
+      mode:    'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify(data),
+      signal:  controller.signal,
+    });
+    clearTimeout(timeout);
+    clearInterval(waitMsgInterval);
+    showSuccess(data);
+  } catch (err) {
+    clearTimeout(timeout);
+    resetBtn();
+    const errBox = document.getElementById('form-errors');
+    errBox.style.display = 'block';
+    if (err.name === 'AbortError') {
+      errBox.textContent = 'Submission timed out — Apps Script may be starting up. Please try again in 30 seconds.';
+    } else {
+      errBox.textContent = 'Submission failed — please check your connection and try again.';
+    }
+  }
+}
+
+function showSuccess(data) {
+  document.getElementById('main-form').style.display = 'none';
+  document.getElementById('progress-wrap') && (document.querySelector('.progress-wrap').style.display='none');
+  const screen = document.getElementById('success-screen');
+  screen.classList.add('visible');
+  document.getElementById('success-details').innerHTML =
+    '<strong>' + data.state + '</strong> &nbsp;·&nbsp; ' + data.coordinator +
+    '<br>Reporting week: <strong>' + data.report_week + '</strong>' +
+    '<br><br>' +
+    (parseInt(data.q6_new_members) > 0
+      ? '&#10003; CRM team notified of ' + data.q6_new_members + ' new member(s).<br>'
+      : '') +
+    '<br>Thank you — your report has been received and will appear in the dashboard within 24 hours.';
+}
+
+function resetForm() {
+  // Clear table rows
+  document.getElementById('events-rows').innerHTML  = '';
+  document.getElementById('media-rows').innerHTML   = '';
+  var sr = document.getElementById('speaking-rows');
+  if (sr) sr.innerHTML = '';
+  eventRowCount = 0; mediaRowCount = 0; speakingRowCount = 0;
+
+  // Hide conditionals and notices
+  document.querySelectorAll('.conditional').forEach(function(el){ el.classList.remove('visible'); });
+  document.getElementById('derived-box').classList.remove('visible');
+  var cn = document.getElementById('crm-notice');
+  if (cn) cn.style.display = 'none';
+
+  // Hide totals rows
+  ['events-totals','media-totals','speaking-totals'].forEach(function(id){
+    var el = document.getElementById(id);
+    if (el) el.style.display = 'none';
+  });
+
+  // Clear errors
+  document.getElementById('form-errors').style.display = 'none';
+  document.getElementById('progress-bar').style.width = '0%';
+
+  // Re-enable submit button
+  var btn = document.getElementById('submit-btn');
+  btn.disabled = false;
+  document.getElementById('submit-spinner').style.display = 'none';
+  btn.childNodes[0].textContent = 'Submit Report ';
+
+  // Reset form fields, show form, hide success
+  document.getElementById('main-form').reset();
+  document.getElementById('main-form').style.display = 'block';
+  document.getElementById('success-screen').classList.remove('visible');
+  window.scrollTo(0, 0);
+  setTimeout(initAutoGrow, 100);
+}
+window.addEventListener('load', initAutoGrow);
+</script>
+</body>
+</html>
